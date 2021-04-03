@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
-
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -29,7 +27,7 @@ public class TilesView extends View {
             this.column = column;
 
         }
-
+       
         int color, backColor = Color.DKGRAY;
         boolean isOpen = false; // цвет карты
         //float x, y, width, height;
