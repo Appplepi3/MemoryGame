@@ -16,8 +16,6 @@ import java.util.Random;
 
 public class TilesView extends View {
 
-
-
     class Card {
         Paint p = new Paint();
 
@@ -29,12 +27,10 @@ public class TilesView extends View {
         }
        
         int color, backColor = Color.DKGRAY;
-        boolean isOpen = false; // цвет карты
-        //float x, y, width, height;
+        boolean isOpen = false;
         int row,column;
 
         public void draw(Canvas c) {
-            // нарисовать карту в виде цветного прямоугольника
             float left,top,right,bottom;
             float [] coord = getCoordinations(row,column);
             left = coord[0];
@@ -56,30 +52,25 @@ public class TilesView extends View {
 
             float [] coordinates = getCoordinations(row,column);
             if (touch_x >= coordinates[0] && touch_x <= coordinates[2] && touch_y >= coordinates[1] && touch_y <= coordinates[3]) {
-                //isOpen = ! isOpen;
                 return true;
             } else return false;
         }
 
     }
 
-
-    // пауза для запоминания карт
-    final int PAUSE_LENGTH = 2; // в секундах
-    final int PAUSE_LENGTH_SHORT = 1; // в секундах
+    final int PAUSE_LENGTH = 2;
+    final int PAUSE_LENGTH_SHORT = 1;
     boolean isOnPauseNow = false;
     int state = 0;
     Context context;
     Card c1 = null;
     Card c2 = null;
-
-    // число открытых карт
+    
     int openedCard = 0;
 
     ArrayList<Card> cards = new ArrayList<>();
     int cards_amount = 0;
-
-    int width, height; // ширина и высота канвы
+    int width, height;
 
     public TilesView(Context context) {
         super(context);
@@ -87,20 +78,9 @@ public class TilesView extends View {
 
     public TilesView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        // 1) заполнить массив tiles случайными цветами
-        // сгенерировать поле 2*n карт, при этом
-        // должно быть ровно n пар карт разных цветов
         newGame();
-
-
         cards_amount = cards.size();
         state = 1;
-
-//        cards.add(new Card(0,0, 200, 150, Color.YELLOW));
-//        cards.add(new Card(200+50, 0, 200 + 200 + 50, 150, Color.YELLOW));
-//
-//        cards.add(new Card(0,200, 200, 150 + 200, Color.RED));
-//        cards.add(new Card(200+50, 200, 200 + 200 + 50, 150+200, Color.RED));
     }
 
     @Override
@@ -108,8 +88,6 @@ public class TilesView extends View {
         super.onDraw(canvas);
         width = canvas.getWidth();
         height = canvas.getHeight();
-        // 2) отрисовка плиток
-        // задать цвет можно, используя кисть
         Paint p = new Paint();
         for (Card c: cards) {
             c.draw(canvas);
@@ -127,14 +105,10 @@ public class TilesView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // 3) получить координаты касания
         int x = (int) event.getX();
         int y = (int) event.getY();
-        // 4) определить тип события
         if (state == 1 || state == 3) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                // палец коснулся экрана
-
                 for (Card c : cards) {
                     if (c.flip(x, y)) {
                         if (state == 1) {
@@ -161,9 +135,6 @@ public class TilesView extends View {
                             invalidate();
                             PauseTask task = new PauseTask();
                             task.execute(PAUSE_LENGTH);
-                            //isOnPauseNow = true;
-
-
                         }
                         Log.d("mytag", "card flipped: " + openedCard);
                         break;
@@ -179,10 +150,6 @@ public class TilesView extends View {
 
     public void changeState(){
         if (state == 0){
-            //newGame();
-
-
-
             state = 1;
         }
         else if (state==4){
@@ -240,15 +207,12 @@ public class TilesView extends View {
                 index = r.nextInt(cards2.size()-1);
             }
 
-
             cards2.get(index).color = current_color;
 
             cards.add(cards2.get(index));
             cards2.remove(index);
         }
         invalidate();
-
-
 
     }
 
@@ -259,18 +223,13 @@ public class TilesView extends View {
 
                 Log.d("mytag", "Pause started");
                 try {
-                    Thread.sleep(integers[0] * 500); // передаём число секунд ожидания
+                    Thread.sleep(integers[0] * 500);
                 } catch (InterruptedException e) {
                 }
                 Log.d("mytag", "Pause finished");
 
-
-
             return null;
         }
-
-        // после паузы, перевернуть все карты обратно
-
 
         @Override
         protected void onPostExecute(Void aVoid) {
